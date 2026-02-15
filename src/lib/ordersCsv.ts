@@ -81,6 +81,35 @@ export async function appendOrder(order: Order): Promise<void> {
   await fs.appendFile(ordersCsvPath, `${separator}${toCsvRow(order)}\n`, "utf8");
 }
 
+async function writeAllOrders(orders: Order[]): Promise<void> {
+  await ensureCsvFile();
+  const rows = orders.map(toCsvRow);
+  const csvContent = [headerRow, ...rows].join("\n") + "\n";
+  await fs.writeFile(ordersCsvPath, csvContent, "utf8");
+}
+
+export async function updateOrder(
+  id: number,
+  fields: Partial<Omit<Order, "id">>
+): Promise<Order | null> {
+  const orders = await readOrders();
+  const index = orders.findIndex((o) => o.id === id);
+  if (index === -1) return null;
+
+  orders[index] = { ...orders[index], ...fields };
+  await writeAllOrders(orders);
+  return orders[index];
+}
+
+export async function deleteOrder(id: number): Promise<boolean> {
+  const orders = await readOrders();
+  const filtered = orders.filter((o) => o.id !== id);
+  if (filtered.length === orders.length) return false;
+
+  await writeAllOrders(filtered);
+  return true;
+}
+
 export function nextOrderId(orders: Order[]): number {
   const maxId = orders.reduce((max, order) => {
     return Math.max(max, order.id);

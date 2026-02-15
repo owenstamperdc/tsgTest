@@ -105,7 +105,7 @@ export default function OrdersPage() {
 
     try {
       const response = await fetch(`/api/orders/${id}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           customer: editCustomer,

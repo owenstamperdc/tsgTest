@@ -1,5 +1,5 @@
 id,customer,item,qty,status,createdAt
-1,Ava Johnson,Hoodie,1,shipped,2026-02-13T10:05:00Z
-2,Mia Patel,Shoes,2,shipped,2026-02-13T11:12:00Z
+1,Ava Johnson,Hoodi,1,shipped,2026-02-13T10:05:00Z
+2,Mia Patel,Shoe,2,shipped,2026-02-13T11:12:00Z
 3,Liam Chen,Hat,1,delivered,2026-02-12T19:02:00Z
 4,Jill Smith,Jeans,3,processing,2026-02-13T19:15:43.694Z

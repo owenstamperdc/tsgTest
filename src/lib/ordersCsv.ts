@@ -117,3 +117,4 @@ export function nextOrderId(orders: Order[]): number {
 
   return maxId + 1;
 }
+

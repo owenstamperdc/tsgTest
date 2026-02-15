@@ -272,20 +272,22 @@ export default function OrdersPage() {
                         </td>
                         <td>{order.createdAt}</td>
                         <td>
-                          <button
-                            onClick={() => void handleSaveEdit(order.id)}
-                            disabled={editSubmitting}
-                          >
-                            {editSubmitting ? "Saving..." : "Save"}
-                          </button>
-                          <button
-                            onClick={() => {
-                              setEditingId(null);
-                            }}
-                            disabled={editSubmitting}
-                          >
-                            Cancel
-                          </button>
+                          <div className="action-buttons">
+                            <button
+                              onClick={() => void handleSaveEdit(order.id)}
+                              disabled={editSubmitting}
+                            >
+                              {editSubmitting ? "Saving..." : "Save"}
+                            </button>
+                            <button
+                              onClick={() => {
+                                setEditingId(null);
+                              }}
+                              disabled={editSubmitting}
+                            >
+                              Cancel
+                            </button>
+                          </div>
                         </td>
                       </>
                     ) : (
@@ -296,23 +298,24 @@ export default function OrdersPage() {
                         <td>{displayStatus(order.status)}</td>
                         <td>{order.createdAt}</td>
                         <td>
-                          <button
-                            onClick={() => {
-                              setEditingId(order.id);
-                              setEditCustomer(order.customer);
-                              setEditItem(order.item);
-                              setEditQty(String(order.qty ?? 1));
-                              setEditStatus(order.status ?? "processing");
-                            }}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => void handleDelete(order.id)}
-                            style={{ marginLeft: 8 }}
-                          >
-                            Delete
-                          </button>
+                          <div className="action-buttons">
+                            <button
+                              onClick={() => {
+                                setEditingId(order.id);
+                                setEditCustomer(order.customer);
+                                setEditItem(order.item);
+                                setEditQty(String(order.qty ?? 1));
+                                setEditStatus(order.status ?? "processing");
+                              }}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => void handleDelete(order.id)}
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </td>
                       </>
                     )}

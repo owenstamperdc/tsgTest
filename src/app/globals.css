@@ -27,15 +27,17 @@ a {
 }
 
 .order-form {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 12px;
+  align-items: flex-end;
 }
 
 .order-form label {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  flex: 1 1 180px;
 }
 
 input,
@@ -68,6 +70,26 @@ td {
   border: 1px solid #e5e7eb;
   padding: 8px;
   text-align: left;
+  white-space: nowrap;
+}
+
+td:nth-child(2),
+td:nth-child(3),
+td:nth-child(6) {
+  white-space: normal;
+  word-break: break-word;
+}
+
+table input,
+table select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+td .action-buttons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: nowrap;
 }
 
 .stack {

@@ -88,3 +88,35 @@ export function nextOrderId(orders: Order[]): number {
 
   return maxId + 1;
 }
+
+export async function writeOrders(orders: Order[]): Promise<void> {
+  await ensureCsvFile();
+
+  const rows = orders.map(toCsvRow).join("\n");
+  await fs.writeFile(ordersCsvPath, `${headerRow}\n${rows}\n`, "utf8");
+}
+
+export async function updateOrder(id: number, updates: Partial<Order>): Promise<Order | null> {
+  const orders = await readOrders();
+  const idx = orders.findIndex((o) => o.id === id);
+  if (idx === -1) return null;
+
+  const existing = orders[idx];
+  const updated: Order = {
+    ...existing,
+    ...updates,
+    id: existing.id,
+  };
+
+  orders[idx] = updated;
+  await writeOrders(orders);
+  return updated;
+}
+
+export async function deleteOrder(id: number): Promise<boolean> {
+  const orders = await readOrders();
+  const filtered = orders.filter((o) => o.id !== id);
+  if (filtered.length === orders.length) return false;
+  await writeOrders(filtered);
+  return true;
+}

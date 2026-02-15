@@ -37,6 +37,7 @@ export default function OrdersPage() {
   const [editCustomer, setEditCustomer] = useState("");
   const [editItem, setEditItem] = useState("");
   const [editQty, setEditQty] = useState("1");
+  const [editStatus, setEditStatus] = useState("processing");
   const [editSubmitting, setEditSubmitting] = useState(false);
 
   async function loadOrders() {
@@ -111,6 +112,7 @@ export default function OrdersPage() {
           customer: editCustomer,
           item: editItem,
           qty: editQty ? Number(editQty) : undefined,
+          status: editStatus,
         }),
       });
 
@@ -153,6 +155,23 @@ export default function OrdersPage() {
     }
   }
 
+  const [statusFilter, setStatusFilter] = useState("all");
+
+  const STATUS_OPTIONS = [
+    { label: "Processing", value: "processing" },
+    { label: "Shipped", value: "shipped" },
+    { label: "Delivered", value: "delivered" },
+  ];
+
+  const statusOptions = ["all", ...STATUS_OPTIONS.map((s) => s.value)];
+
+  function displayStatus(value: string) {
+    const found = STATUS_OPTIONS.find((s) => s.value === value);
+    return found ? found.label : value;
+  }
+
+  const filteredOrders = statusFilter === "all" ? orders : orders.filter((o) => o.status === statusFilter);
+
   return (
     <main className="page stack">
       <h1>Orders</h1>
@@ -190,6 +209,22 @@ export default function OrdersPage() {
 
       <section className="card">
         <h2>Order Table</h2>
+        <div style={{ marginBottom: 12 }}>
+          <label>
+            Filter by status
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              style={{ marginLeft: 8 }}
+            >
+              {statusOptions.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
         {loading ? (
           <p>Loading...</p>
         ) : (
@@ -206,7 +241,7 @@ export default function OrdersPage() {
               </tr>
             </thead>
             <tbody>
-              {orders.map((order) => (
+              {filteredOrders.map((order) => (
                   <tr key={order.id}>
                     <td>{order.id}</td>
                     {editingId === order.id ? (
@@ -226,7 +261,15 @@ export default function OrdersPage() {
                             onChange={(e) => setEditQty(e.target.value)}
                           />
                         </td>
-                        <td>{order.status}</td>
+                        <td>
+                          <select value={editStatus} onChange={(e) => setEditStatus(e.target.value)}>
+                            {STATUS_OPTIONS.map((s) => (
+                              <option key={s.value} value={s.value}>
+                                {s.label}
+                              </option>
+                            ))}
+                          </select>
+                        </td>
                         <td>{order.createdAt}</td>
                         <td>
                           <button
@@ -250,7 +293,7 @@ export default function OrdersPage() {
                         <td>{order.customer}</td>
                         <td>{order.item}</td>
                         <td>{order.qty}</td>
-                        <td>{order.status}</td>
+                        <td>{displayStatus(order.status)}</td>
                         <td>{order.createdAt}</td>
                         <td>
                           <button
@@ -259,6 +302,7 @@ export default function OrdersPage() {
                               setEditCustomer(order.customer);
                               setEditItem(order.item);
                               setEditQty(String(order.qty ?? 1));
+                              setEditStatus(order.status ?? "processing");
                             }}
                           >
                             Edit
